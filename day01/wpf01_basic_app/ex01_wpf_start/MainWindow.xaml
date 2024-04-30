@@ -7,11 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button x:Name="BtnClick" Content="CLICK" FontSize="20" FontFamily="NanumGothic" FontWeight="Bold" Click="BtnClick_Click" />
-        
-        
-        
+        <Button Content="Button" HorizontalAlignment="Left" Margin="73,55,0,0" VerticalAlignment="Top" Height="84" Width="138"/>
+
     </Grid>
     
-   
 </Window>
+   
