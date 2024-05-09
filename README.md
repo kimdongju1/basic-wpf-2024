@@ -102,15 +102,15 @@ IoT 개발자 WPF 학습리포지토리
             - 메서드와 이름이 동일한 Can... 프로퍼티 지정, 버튼 활성/비활성화
             - 모든 속성에 NotifyOfPropertyChange() 메서드존재!! (값 변경 알림)
 
-- ![실행화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/images/wpf002.png)
+- ![실행화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/Images/wpf002.png)
 
 ## 5일차 
 - Caliburn.Micro + ManApps.Metro
     - Metro(Modern UI) 디자인 접목
 
-- ![실행화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/images/wpf003.png)
+- ![실행화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/Images/wpf003.png)
 
-- ![저장화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/images/wpf004.png)
+- ![저장화면](https://raw.githubusercontent.com/kimdongju1/basic-wpf-2024/main/Images/wpf004.png)
 
 - Movie API 연동 앱, MovieFinder 2024
     - 좋아하는 영화 즐겨찾기
