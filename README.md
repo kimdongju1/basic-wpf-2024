@@ -135,15 +135,12 @@ IoT 개발자 WPF 학습리포지토리
 ## 6일차
 - MovieFinder 2024 남은것
     - 즐겨찾기 후 다시 선택 즐겨찾기 막아야 함
-    - 즐겨찾기 삭제 
+    - 즐겨찾기 삭제 구현
+    - 즐겨찾기 일부만 저장기능 추가
     - 그리드뷰 영화를 더블클릭하면 영화소개 팝업 
 
 ## 7일차
 - MovieFinder 2024 완료
-
-
-
-https://github.com/kimdongju1/basic-wpf-2024/assets/158007459/fb82fe0a-eb89-4f09-879a-ce1c1f1434c3
 
 
 
