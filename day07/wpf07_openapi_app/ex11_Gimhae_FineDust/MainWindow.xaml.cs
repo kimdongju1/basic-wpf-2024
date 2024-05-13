@@ -1,4 +1,4 @@
-﻿using System.Data;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 using ex11_Gimhae_FineDust.Models;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Data.SqlClient;
 using Newtonsoft.Json.Linq;
-using static System.Net.WebRequestMethods;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ex11_Gimhae_FineDust
 {
@@ -50,6 +50,7 @@ namespace ex11_Gimhae_FineDust
                 {
                     saveDates.Add(Convert.ToString(row["Save_Date"]));
                 }
+
                 CboReqDate.ItemsSource = saveDates;
             }
         }
@@ -70,9 +71,10 @@ namespace ex11_Gimhae_FineDust
                 req = WebRequest.Create(openApiUri);
                 res = await req.GetResponseAsync();
                 reader = new StreamReader(res.GetResponseStream());
-                result = await reader.ReadToEndAsync();
+                result = reader.ReadToEnd();
 
                 //await this.ShowMessageAsync("결과", result);
+                Debug.WriteLine(result);
             }
             catch (Exception ex)
             {
@@ -85,7 +87,7 @@ namespace ex11_Gimhae_FineDust
             if (status == 200)
             {
                 var data = jsonResult["data"];
-                var jsonArray = data as JArray; // json 자체에서 []안에 들어간 배열데이터만 JArray 변환가능
+                var jsonArray = data as JArray; // json자체에서 []안에 들어간 배열데이터만 JArray 변환가능
 
                 var dustSensors = new List<DustSensor>();
                 foreach (var item in jsonArray)
@@ -104,11 +106,12 @@ namespace ex11_Gimhae_FineDust
                         Pm25_after = Convert.ToInt32(item["pm25_after"]),
                         State = Convert.ToInt32(item["state"]),
                         Ison = Convert.ToBoolean(item["ison"]),
-                        Timestamp = Convert.ToDateTime(item["timestamp"])
+                        Timestamp = Convert.ToDateTime(item["timestamp"]),
                     });
                 }
+
                 this.DataContext = dustSensors;
-                StsResult.Content = $"OpenAPI{dustSensors.Count}건 조회완료!";
+                StsResult.Content = $"OpenAPI {dustSensors.Count}건 조회완료!";
             }
         }
 
@@ -146,7 +149,7 @@ namespace ex11_Gimhae_FineDust
                         insRes += cmd.ExecuteNonQuery();
                     }
 
-                    if (insRes > 0)
+                    if (insRes >0)
                     {
                         await this.ShowMessageAsync("저장", "DB저장성공!");
                         StsResult.Content = $"DB저장 {insRes}건 성공!";
@@ -161,16 +164,58 @@ namespace ex11_Gimhae_FineDust
             InitComboDateFromDB();
         }
 
+        // 수업 이후 추가내용. 필요시 구현할 것
         private void CboReqDate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (CboReqDate.SelectedValue != null)
+            {
+                using (SqlConnection conn = new SqlConnection(Helpers.Common.CONNSTRING))
+                {
+                    conn.Open();
 
+                    SqlCommand cmd = new SqlCommand(Models.DustSensor.SELECT_QUERY, conn);
+                    cmd.Parameters.AddWithValue("@Timestamp", CboReqDate.SelectedValue.ToString());
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataSet dSet = new DataSet();
+                    adapter.Fill(dSet, "Dustsensor");
+                    var dustSensors = new List<DustSensor>();
+
+                    foreach (DataRow row in dSet.Tables["Dustsensor"].Rows)
+                    {
+                        dustSensors.Add(new DustSensor
+                        {
+                            Id = Convert.ToInt32(row["Id"]),
+                            Dev_id = Convert.ToString(row["Dev_id"]),
+                            Name = Convert.ToString(row["Name"]),
+                            Loc = Convert.ToString(row["Loc"]),
+                            Coordx = Convert.ToDouble(row["Coordx"]),
+                            Coordy = Convert.ToDouble(row["Coordy"]),
+                            Ison = Convert.ToBoolean(row["Ison"]),
+                            Pm10_after = Convert.ToInt32(row["Pm10_after"]),
+                            Pm25_after = Convert.ToInt32(row["Pm25_after"]),
+                            State = Convert.ToInt32(row["State"]),
+                            Timestamp = Convert.ToDateTime(row["Timestamp"]),
+                            Company_id = Convert.ToString(row["Company_id"]),
+                            Company_name = Convert.ToString(row["Company_name"])
+                        });
+                    }
+
+                    this.DataContext = dustSensors;
+                    StsResult.Content = $"DB {dustSensors.Count}건 조회완료";
+                }                
+            }
+            else
+            {
+                this.DataContext = null;
+                StsResult.Content = $"DB 조회클리어";
+            }
         }
 
         private void GrdResult_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var curItem = GrdResult.SelectedItem as DustSensor;
 
-            var mapWindow = new MapWindow(curItem.Coordy,curItem.Coordx);
+            var mapWindow = new MapWindow(curItem.Coordy, curItem.Coordx);
             mapWindow.Owner = this;
             mapWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             mapWindow.ShowDialog();
