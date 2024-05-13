@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace ex12_WPF_Project
+namespace ex12_AnimalHospital_Find
 {
     /// <summary>
     /// Interaction logic for App.xaml

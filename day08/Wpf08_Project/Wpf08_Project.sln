@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ex12_WPF_Project", "ex12_WPF_Project\ex12_WPF_Project.csproj", "{D46DE152-CD50-4DE0-8B97-76A22B4409B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ex12_AnimalHospital_Find", "ex12_AnimalHospital_Find\ex12_AnimalHospital_Find.csproj", "{1C832530-4060-4304-9846-CAD41E4565EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D46DE152-CD50-4DE0-8B97-76A22B4409B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D46DE152-CD50-4DE0-8B97-76A22B4409B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D46DE152-CD50-4DE0-8B97-76A22B4409B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D46DE152-CD50-4DE0-8B97-76A22B4409B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C832530-4060-4304-9846-CAD41E4565EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C832530-4060-4304-9846-CAD41E4565EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C832530-4060-4304-9846-CAD41E4565EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C832530-4060-4304-9846-CAD41E4565EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C06AB671-7F35-4115-B5AA-C23305F1669A}
+		SolutionGuid = {B32DFE68-637C-4C72-A8EE-0F71C766C247}
 	EndGlobalSection
 EndGlobal
