@@ -12,9 +12,9 @@ namespace ex12_AnimalHospital_Find
             InitializeComponent();
         }
 
-        public MapWindow(string LC, string lon) : this()
+        public MapWindow(double let, double lon) : this()
         {
-            BrsLoc.Address = $"https://map.naver.com/p/search/{LC}";
+            BrsLoc.Address = $"https://map.naver.com/p/search/{let},{lon}";
         }
     }
 }

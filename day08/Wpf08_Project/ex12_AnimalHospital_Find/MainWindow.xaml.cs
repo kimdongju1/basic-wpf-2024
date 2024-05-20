@@ -32,14 +32,36 @@ namespace ex12_AnimalHospital_Find
             InitializeComponent();
         }
 
-        
-        
-            
-        
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitComboDateFromDB();
+        }
+        private void InitComboDateFromDB()
+        {
+            using (SqlConnection conn = new SqlConnection(Helpers.Common.CONNSTRING))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(Models.FindAnimalHosp.GETDATE_QUERY, conn);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataSet dSet = new DataSet();
+                adapter.Fill(dSet);
+                List<string> saveDates = new List<string>();
 
+                foreach (DataRow row in dSet.Tables[0].Rows)
+                {
+                    saveDates.Add(Convert.ToString(row["gugun"]));
+                }
+
+                CboReqDate.ItemsSource = saveDates;
+            }
+        }
+
+
+
+        // 실시간 조회 버튼 
         private async void BtnReqRealtime_Click(object sender, RoutedEventArgs e)
         {
-            string openApiUri = "https://apis.data.go.kr/6260000/BusanAnimalHospService/getTblAnimalHospital?serviceKey=dBZKviyzKBEggoDlDtv%2F5D3SxdJJR5WRsISUD4vmLMb9%2BHcE0MPllCFf6FCGi7ureBfBEhXt5RZrrqTK48nCWA%3D%3D&pageNo=1&numOfRows=10&resultType=json";
+            string openApiUri = "https://apis.data.go.kr/6260000/BusanAnimalHospService/getTblAnimalHospital?serviceKey=dBZKviyzKBEggoDlDtv%2F5D3SxdJJR5WRsISUD4vmLMb9%2BHcE0MPllCFf6FCGi7ureBfBEhXt5RZrrqTK48nCWA%3D%3D&pageNo=1&numOfRows=56&resultType=json";
             string result = string.Empty;
 
             WebRequest req = null;
@@ -61,11 +83,11 @@ namespace ex12_AnimalHospital_Find
             }
 
             var jsonResult = JObject.Parse(result);
-            var status = Convert.ToInt32(jsonResult["status"]);
+            var status = Convert.ToInt32(jsonResult["getTblAnimalHospital"]["header"]["resultCode"]);
 
-            if (status == 200)
+            if (status == 00)
             {
-                var data = jsonResult["data"];
+                var data = jsonResult["getTblAnimalHospital"]["body"]["items"]["item"];
                 var jsonArray = data as JArray;
 
                 var findAnimalHosps = new List<FindAnimalHosp>();
@@ -73,25 +95,24 @@ namespace ex12_AnimalHospital_Find
                 {
                     findAnimalHosps.Add(new FindAnimalHosp()
                     {
-                        Id = 0,
                         Gugun = Convert.ToString(item["gugun"]),
                         Animal_hospital = Convert.ToString(item["animal_hospital"]),
                         Approval = Convert.ToString(item["approval"]),
                         Road_address = Convert.ToString(item["road_address"]),
                         Tel = Convert.ToString(item["tel"]),
-                        Lat = Convert.ToString(item["lat"]),
-                        Lon = Convert.ToString(item["lon"]),
+                        Lat = Convert.ToDouble(item["lat"]),
+                        Lon = Convert.ToDouble(item["lon"]),
                         Basic_date = Convert.ToString(item["basic_data"]),
                     });
 
-                    this.DataContext = findAnimalHosps;
                     //StsResult.Content = $"OpenAPI {findAnimalHosps.Count}건 조회완료!";
                     
                 }
+                    this.DataContext = findAnimalHosps;
 
             }
         }
-
+        // 저장
         private async void BtnSaveData_Click(object sender, RoutedEventArgs e)
         {
             if (GrdResult.Items.Count == 0)
@@ -117,7 +138,7 @@ namespace ex12_AnimalHospital_Find
                         cmd.Parameters.AddWithValue("@Tel", item.Tel);
                         cmd.Parameters.AddWithValue("@Lat", item.Lat);
                         cmd.Parameters.AddWithValue("@Lon", item.Lon);
-                        cmd.Parameters.AddWithValue("@Basic_date", item.Basic_date);
+                        cmd.Parameters.AddWithValue("@Basic_data", item.Basic_date);
 
                         insRes += cmd.ExecuteNonQuery();
                     }
@@ -137,50 +158,49 @@ namespace ex12_AnimalHospital_Find
 
             
         }
-
+        // 구로 나눠서 보이게 하는것 
         private void CboReqDate_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-        //    if (CboReqDate.SelectedValue != null)
-        //    {
-        //        using (SqlConnection conn = new SqlConnection(Helpers.Common.CONNSTRING))
-        //        {
-        //            conn.Open();
+            if (CboReqDate.SelectedValue != null)
+            {
+                using (SqlConnection conn = new SqlConnection(Helpers.Common.CONNSTRING))
+                {
+                    conn.Open();
 
-        //            SqlCommand cmd = new SqlCommand(Models.FindAnimalHosp.SELECT_QUERY, conn);
-        //            cmd.Parameters.AddWithValue("@basic_data", CboReqDate.SelectedValue.ToString());
-        //            SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-        //            DataSet dSet = new DataSet();
-        //            adapter.Fill(dSet, "FindAnimalHosp");
-        //            var findAnimalHosps = new List<FindAnimalHosp>();
+                    SqlCommand cmd = new SqlCommand(Models.FindAnimalHosp.SELECT_QUERY_BY_GUGUN, conn);
+                    cmd.Parameters.AddWithValue("@gugun", CboReqDate.SelectedValue.ToString());
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataSet dSet = new DataSet();
+                    adapter.Fill(dSet, "FindAnimalHosp");
+                    var findAnimalHosps = new List<FindAnimalHosp>();
 
-        //            foreach (DataRow row in dSet.Tables["FindAnimalHosp"].Rows)
-        //            {
-        //                FindAnimalHosp.Add(new FindAnimalHosp
-        //                {
-        //                    Id = 0,
-        //                    Gugun = Convert.ToString(row["gugun"]),
-        //                    Animal_hospital = Convert.ToString(row["animal_hospital"]),
-        //                    Approval = Convert.ToString(row["approval"]),
-        //                    Road_address = Convert.ToString(row["road_address"]),
-        //                    Tel = Convert.ToString(row["tel"]),
-        //                    Lat = Convert.ToString(row["lat"]),
-        //                    Lon = Convert.ToString(row["lon"]),
-        //                    Basic_date = Convert.ToString(row["basic_data"]),
-        //                });
-        //            }
+                    foreach (DataRow row in dSet.Tables["FindAnimalHosp"].Rows)
+                    {
+                        findAnimalHosps.Add(new FindAnimalHosp
+                        {
+                            Gugun = Convert.ToString(row["gugun"]),
+                            Animal_hospital = Convert.ToString(row["animal_hospital"]),
+                            Approval = Convert.ToString(row["approval"]),
+                            Road_address = Convert.ToString(row["road_address"]),
+                            Tel = Convert.ToString(row["tel"]),
+                            Lat = Convert.ToDouble(row["lat"]),
+                            Lon = Convert.ToDouble(row["lon"]),
+                            Basic_date = Convert.ToString(row["basic_data"]),
+                        });
+                    }
 
-        //            this.DataContext = findAnimalHosps;
-        //            StsResult.Content = $"DB {findAnimalHosps.Count}건 조회완료";
-        //        }
-        //    }
-        //    else
-        //    {
-        //        this.DataContext = null;
-        //        StsResult.Content = $"DB 조회클리어";
-        //    }
+                    this.DataContext = findAnimalHosps;
+                    //StsResult.Content = $"DB {findAnimalHosps.Count}건 조회완료";
+                }
+            }
+            else
+            {
+                this.DataContext = null;
+                //StsResult.Content = $"DB 조회클리어";
+            }
         }
 
-        
+        // 더블클릭후 위치 맵 보이기
         private void GrdResult_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var curItem = GrdResult.SelectedItem as FindAnimalHosp;
@@ -192,6 +212,5 @@ namespace ex12_AnimalHospital_Find
 
         }
 
-        
     }
 }

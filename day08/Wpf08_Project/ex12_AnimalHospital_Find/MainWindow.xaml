@@ -8,7 +8,8 @@
     xmlns:iconPack="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:ex12_AnimalHospital_Find"
     mc:Ignorable="d"
-    Title="AnimalHospital Find" Height="450" Width="800" MinHeight="300" MinWidth="600">
+    Title="AnimalHospital Find" Height="450" Width="800" MinHeight="300" MinWidth="600"
+    Loaded="MetroWindow_Loaded">
 <mah:MetroWindow.IconTemplate>
     <DataTemplate>
         <iconPack:PackIconFontAwesome Kind="DogSolid" Margin="10,7,7,0" Foreground="White" />
@@ -36,7 +37,12 @@
                 <Button x:Name="BtnSaveData" Content="저장" Width="80" Margin="5,10"
                             Style="{StaticResource MahApps.Styles.Button.Square.Highlight}"
                             Click="BtnSaveData_Click" />
-                
+                <ComboBox x:Name="CboReqDate" Width="150" Margin="5,10,10,10"
+                          Style="{StaticResource MahApps.Styles.ComboBox}"
+                          mah:TextBoxHelper.Watermark="구 선택"
+                          mah:TextBoxHelper.UseFloatingWatermark="True"
+                          mah:TextBoxHelper.ClearTextButton="True"
+                          SelectionChanged="CboReqDate_SelectionChanged" />     
             </StackPanel>
         </Grid>
 
@@ -46,7 +52,7 @@
                       MouseDoubleClick="GrdResult_MouseDoubleClick" />
 
         <StatusBar Grid.Row="2">
-            <StatusBarItem Content="김해시 미세먼지앱" />
+            <StatusBarItem Content="부산광역시 동물병원" />
             <Separator Style="{StaticResource MahApps.Styles.Control.WindowCommands}"/>
             </StatusBar>
 
